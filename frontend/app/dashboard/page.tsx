@@ -12,52 +12,10 @@ import { Activity, Search, MapPin, User, LogOut, Hospital } from "lucide-react"
 import { MapComponent } from "@/components/map-component"
 import { FacilityCard } from "@/components/facility-card"
 import { WhatsAppButton } from "@/components/whatsapp-button"
+import { fetchFacilities } from "@/lib/api"
 
-// Mock facility data
-const mockFacilities = [
-  {
-    id: 1,
-    name: "District Hospital Nashik",
-    type: "District Hospital",
-    distance: "12.5 km",
-    travelTime: "25 min",
-    bedsAvailable: 15,
-    totalBeds: 50,
-    specialists: ["Cardiologist", "Orthopedic"],
-    labWaitTime: "30 min",
-    lat: 20.0,
-    lng: 73.78,
-    availability: "available",
-  },
-  {
-    id: 2,
-    name: "PHC Satana",
-    type: "Primary Health Center",
-    distance: "8.2 km",
-    travelTime: "18 min",
-    bedsAvailable: 3,
-    totalBeds: 10,
-    specialists: ["General Physician"],
-    labWaitTime: "15 min",
-    lat: 20.05,
-    lng: 73.8,
-    availability: "limited",
-  },
-  {
-    id: 3,
-    name: "Community Health Center Malegaon",
-    type: "Community Health Center",
-    distance: "22.8 km",
-    travelTime: "45 min",
-    bedsAvailable: 0,
-    totalBeds: 30,
-    specialists: ["Pediatrician", "Gynecologist"],
-    labWaitTime: "60 min",
-    lat: 20.1,
-    lng: 73.85,
-    availability: "full",
-  },
-]
+// Mock facility data - REMOVED, using state directly
+
 
 const symptoms = [
   "Fever",
@@ -76,7 +34,7 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState<string | null>(null)
   const [selectedSymptom, setSelectedSymptom] = useState("")
   const [location, setLocation] = useState("")
-  const [facilities, setFacilities] = useState(mockFacilities)
+  const [facilities, setFacilities] = useState<any[]>([])
   const [searchPerformed, setSearchPerformed] = useState(false)
 
   useEffect(() => {
@@ -91,19 +49,45 @@ export default function DashboardPage() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation(`${position.coords.latitude.toFixed(2)}, ${position.coords.longitude.toFixed(2)}`)
+          const lat = position.coords.latitude
+          const lng = position.coords.longitude
+          setLocation(`${lat.toFixed(4)}, ${lng.toFixed(4)}`)
+
+          // Fetch facilities automatically when location is found
+          fetchFacilitiesWithLocation(lat, lng)
         },
         () => {
           setLocation("Location unavailable")
+          // Fetch without location (will show all sorted default or unsorted)
+          fetchFacilitiesWithLocation()
         },
       )
     }
   }, [router])
 
+  const fetchFacilitiesWithLocation = async (lat?: number, lng?: number, symptom?: string) => {
+    try {
+      const data = await fetchFacilities(lat, lng, symptom)
+      setFacilities(data)
+    } catch (error) {
+      console.error("Failed to fetch facilities:", error)
+    }
+  }
+
   const handleSearch = () => {
     setSearchPerformed(true)
-    // In production, this would call the backend API to search facilities
-    console.log("[v0] Searching for facilities with symptom:", selectedSymptom)
+    // Parse location string back to numbers if possible, or just pass symptom
+    // Ideally we store simple lat/lng in state not just the string
+    // For now re-using the initial fetch logic would be cleaner if we stored lat/lng state
+    const [latStr, lngStr] = location.split(',').map(s => s.trim())
+    const lat = parseFloat(latStr)
+    const lng = parseFloat(lngStr)
+
+    if (!isNaN(lat) && !isNaN(lng)) {
+      fetchFacilitiesWithLocation(lat, lng, selectedSymptom)
+    } else {
+      fetchFacilitiesWithLocation(undefined, undefined, selectedSymptom)
+    }
   }
 
   const handleLogout = () => {
@@ -206,7 +190,17 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="h-[400px] rounded-lg overflow-hidden bg-muted">
-                  <MapComponent facilities={facilities} />
+                  <MapComponent
+                    facilities={facilities}
+                    userLocation={
+                      location.includes(',')
+                        ? {
+                          lat: parseFloat(location.split(',')[0]),
+                          lng: parseFloat(location.split(',')[1])
+                        }
+                        : null
+                    }
+                  />
                 </div>
                 <div className="flex gap-4 mt-4 text-sm">
                   <div className="flex items-center gap-2">

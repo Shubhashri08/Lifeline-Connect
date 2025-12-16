@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { MapPin, Clock, Bed, Navigation, Stethoscope, Activity } from "lucide-react"
 
 interface Facility {
-  id: number
+  id: string
   name: string
   type: string
   distance: string
@@ -15,7 +15,7 @@ interface Facility {
   totalBeds: number
   specialists: string[]
   labWaitTime: string
-  availability: "available" | "limited" | "full"
+  availability: "available" | "limited" | "full" | string
 }
 
 interface FacilityCardProps {
