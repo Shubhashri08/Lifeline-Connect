@@ -47,7 +47,7 @@ export default function LandingPage() {
               </h1>
               <p className="text-lg text-muted-foreground text-pretty leading-relaxed">
                 Navigate healthcare effortlessly with real-time facility data, optimized routes, and secure
-                blockchain-verified appointments.
+                securely verified appointments.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" asChild className="text-base">
@@ -128,9 +128,9 @@ export default function LandingPage() {
                 <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
                   <Shield className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold">Blockchain-Verified Appointments</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Secure NFT tokens prevent fraud and queue-jumping, ensuring fair access to healthcare.
+                <h3 className="text-xl font-semibold">Secure Verified Appointments</h3>
+                <p className="text-muted-foreground">
+                  Tamper-proof Booking IDs prevent fraud and queue-jumping, ensuring fair access to healthcare.
                 </p>
               </CardContent>
             </Card>

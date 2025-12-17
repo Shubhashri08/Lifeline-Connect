@@ -20,7 +20,8 @@ interface Appointment {
   date: string
   time: string
   specialist: string
-  nftToken: string
+  bookingId?: string
+  nftToken?: string
   createdAt: string
 }
 
@@ -312,13 +313,13 @@ export default function ProfilePage() {
                                 <div className="flex-1 space-y-2">
                                   <div className="flex items-center gap-2">
                                     <QrCode className="h-4 w-4 text-muted-foreground" />
-                                    <p className="text-xs text-muted-foreground">Token ID</p>
+                                    <p className="text-xs text-muted-foreground">Booking ID</p>
                                   </div>
-                                  <p className="font-mono text-xs break-all">{appointment.nftToken}</p>
+                                  <p className="font-mono text-xs break-all font-bold">{appointment.bookingId || appointment.nftToken}</p>
                                 </div>
                                 <div className="h-20 w-20 bg-white p-1 rounded">
                                   <img
-                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${appointment.nftToken}`}
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${appointment.bookingId || appointment.nftToken}`}
                                     alt="QR"
                                     className="w-full h-full object-contain"
                                   />

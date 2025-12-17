@@ -4,6 +4,7 @@
   "/api/hospitals/route": "app/api/hospitals/route.js",
   "/booking/[id]/page": "app/booking/[id]/page.js",
   "/dashboard/page": "app/dashboard/page.js",
+  "/login/page": "app/login/page.js",
   "/page": "app/page.js",
   "/profile/page": "app/profile/page.js",
   "/signup/page": "app/signup/page.js"

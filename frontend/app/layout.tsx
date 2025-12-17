@@ -11,7 +11,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Lifeline Connect - Rural Healthcare Navigator",
   description:
-    "Empowering Rural Healthcare Access in India. Find healthcare facilities, check real-time availability, and book appointments with blockchain-verified tokens.",
+    "Empowering Rural Healthcare Access in India. Find healthcare facilities, check real-time availability, and book appointments with secure verified tokens.",
   generator: "v0.app",
   icons: {
     icon: [

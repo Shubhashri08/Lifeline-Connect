@@ -113,7 +113,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$toaster$
 ;
 const metadata = {
     title: "Lifeline Connect - Rural Healthcare Navigator",
-    description: "Empowering Rural Healthcare Access in India. Find healthcare facilities, check real-time availability, and book appointments with blockchain-verified tokens.",
+    description: "Empowering Rural Healthcare Access in India. Find healthcare facilities, check real-time availability, and book appointments with secure verified tokens.",
     generator: "v0.app",
     icons: {
         icon: [

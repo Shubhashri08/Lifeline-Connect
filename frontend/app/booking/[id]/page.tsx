@@ -28,7 +28,7 @@ export default function BookingPage() {
   const [notes, setNotes] = useState("")
   const [loading, setLoading] = useState(false)
   const [bookingComplete, setBookingComplete] = useState(false)
-  const [nftToken, setNftToken] = useState<string | null>(null)
+  const [bookingId, setBookingId] = useState<string | null>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -64,9 +64,8 @@ export default function BookingPage() {
     setSelectedDate(tomorrow.toISOString().split("T")[0])
   }, [facilityId, router])
 
-  const generateNFTToken = () => {
-    // Generate a unique token ID
-    return `APT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
+  const generateBookingId = () => {
+    return `BK-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`
   }
 
   const handleBookAppointment = async () => {
@@ -77,8 +76,8 @@ export default function BookingPage() {
     setLoading(true)
 
     try {
-      const token = generateNFTToken()
-      setNftToken(token)
+      const id = generateBookingId()
+      setBookingId(id)
 
       const appointmentData = {
         facilityId: facility.id,
@@ -89,7 +88,7 @@ export default function BookingPage() {
         notes,
         userEmail: getUserEmail(),
         userName: getUserName(),
-        nftToken: token,
+        bookingId: id,
         status: 'confirmed'
       }
 
@@ -113,7 +112,7 @@ export default function BookingPage() {
     return null
   }
 
-  if (bookingComplete && nftToken) {
+  if (bookingComplete && bookingId) {
     return (
       <div className="min-h-screen bg-background">
         {/* Header */}
@@ -156,14 +155,14 @@ export default function BookingPage() {
                 </div>
 
                 <div className="border rounded-lg p-4 bg-muted/30">
-                  <p className="text-sm text-muted-foreground mb-2">Token ID</p>
-                  <p className="font-mono text-sm break-all mb-4">{nftToken}</p>
+                  <p className="text-sm text-muted-foreground mb-2">Booking ID</p>
+                  <p className="font-mono text-lg font-bold tracking-wider mb-4">{bookingId}</p>
 
                   {/* Real QR Code using api.qrserver.com */}
                   <div className="bg-background border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center">
                     <div className="h-48 w-48 bg-white rounded-lg mb-4 flex items-center justify-center p-2">
                       <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${nftToken}`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${bookingId}`}
                         alt="Appointment QR Code"
                         className="h-full w-full object-contain"
                       />
@@ -176,7 +175,7 @@ export default function BookingPage() {
 
                 <Alert>
                   <AlertDescription className="text-sm leading-relaxed">
-                    <strong>Important:</strong> Save this token ID or take a screenshot of the QR code. You will need it
+                    <strong>Important:</strong> Save this Booking ID or take a screenshot of the QR code. You will need it
                     to verify your appointment at the healthcare facility.
                   </AlertDescription>
                 </Alert>
