@@ -15,6 +15,8 @@ interface Facility {
   totalBeds: number
   specialists: string[]
   labWaitTime: string
+  lat: number
+  lng: number
   availability: "available" | "limited" | "full" | string
 }
 
@@ -101,7 +103,11 @@ export function FacilityCard({ facility, onBook }: FacilityCardProps) {
         <Button onClick={onBook} className="flex-1" disabled={facility.availability === "full"}>
           Book Appointment
         </Button>
-        <Button variant="outline" className="flex-1 bg-transparent">
+        <Button
+          variant="outline"
+          className="flex-1 bg-transparent"
+          onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${facility.lat},${facility.lng}`, '_blank')}
+        >
           <Navigation className="h-4 w-4 mr-2" />
           Get Directions
         </Button>

@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Activity, ArrowLeft, Calendar, Clock, QrCode, Edit2, Save, X, MessageCircle } from "lucide-react"
+import { Activity, ArrowLeft, Calendar, Clock, QrCode, Edit2, Save, X, MessageCircle, MapPin } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { WhatsAppButton } from "@/components/whatsapp-button"
@@ -51,17 +51,28 @@ export default function ProfilePage() {
     setUserEmail(email)
     setEditName(name)
 
-    // Load appointments from localStorage
-    const storedAppointments = JSON.parse(localStorage.getItem("appointments") || "[]")
-    // Filter appointments for current user
-    const userAppointments = storedAppointments.filter((apt: Appointment) => apt.userEmail === email)
-    setAppointments(userAppointments)
+    // Load appointments from API
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch("/api/appointments");
+        const allAppointments = await res.json();
+        const email = getUserEmail();
+        // Filter appointments for current user
+        const userAppointments = allAppointments.filter((apt: any) => apt.userEmail === email)
+        setAppointments(userAppointments)
+      } catch (e) {
+        console.error("Failed to fetch appointments", e);
+      }
+    }
+    fetchAppointments();
 
     // Load preferences
     setLanguage(localStorage.getItem("preferred_language") || "english")
     setEditPhone(localStorage.getItem("user_phone") || "")
     setEditLocation(localStorage.getItem("user_location") || "")
   }, [router])
+
+  // ... (keep handleSaveProfile, handleCancelEdit, handleLanguageChange, handleLogout)
 
   const handleSaveProfile = () => {
     localStorage.setItem("user_name", editName)
@@ -84,6 +95,32 @@ export default function ProfilePage() {
   const handleLogout = () => {
     logout()
   }
+
+  // Helper to open google maps
+  const openDirections = async (facilityId: string) => {
+    // We might need to fetch facility details again to get lat/lng if not stored in appointment
+    // Or we can store lat/lng in appointment. 
+    // For now let's try to find it from an API or just open maps with name
+    // Ideally the appointment should have facility lat/lng. 
+    // Let's assume we can fetch all facilities and find it.
+    try {
+      const facilities = await import("@/lib/data/facilities.json"); // Dynamic import or fetch
+      // Actually better to use our existing API helper if possible, or just fetch
+      const res = await fetch("/api/hospitals");
+      const data = await res.json();
+      const facility = data.find((f: any) => f.id === facilityId);
+
+      if (facility) {
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${facility.lat},${facility.lng}`, '_blank')
+      } else {
+        // Fallback search by name
+        // window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(facilityId)}`, '_blank')
+      }
+    } catch (e) {
+      console.error("Error opening directions", e);
+    }
+  }
+
 
   const getAppointmentStatus = (date: string, time: string) => {
     const appointmentDate = new Date(`${date} ${time}`)
@@ -133,6 +170,7 @@ export default function ProfilePage() {
 
           {/* Profile Tab */}
           <TabsContent value="profile" className="space-y-6">
+            {/* ... Profile content (unchanged) ... */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
@@ -244,7 +282,7 @@ export default function ProfilePage() {
                 </Alert>
 
                 <div className="grid gap-4">
-                  {appointments.map((appointment) => {
+                  {appointments.map((appointment: any) => {
                     const { status, color } = getAppointmentStatus(appointment.date, appointment.time)
                     return (
                       <Card key={appointment.id}>
@@ -270,20 +308,32 @@ export default function ProfilePage() {
                                 </div>
                               </div>
 
-                              <div className="bg-muted/50 rounded-lg p-3 space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <QrCode className="h-4 w-4 text-muted-foreground" />
-                                  <p className="text-xs text-muted-foreground">NFT Token ID</p>
+                              <div className="bg-muted/50 rounded-lg p-3 space-y-2 flex gap-4">
+                                <div className="flex-1 space-y-2">
+                                  <div className="flex items-center gap-2">
+                                    <QrCode className="h-4 w-4 text-muted-foreground" />
+                                    <p className="text-xs text-muted-foreground">Token ID</p>
+                                  </div>
+                                  <p className="font-mono text-xs break-all">{appointment.nftToken}</p>
                                 </div>
-                                <p className="font-mono text-xs break-all">{appointment.nftToken}</p>
+                                <div className="h-20 w-20 bg-white p-1 rounded">
+                                  <img
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${appointment.nftToken}`}
+                                    alt="QR"
+                                    className="w-full h-full object-contain"
+                                  />
+                                </div>
                               </div>
                             </div>
 
                             <div className="flex md:flex-col gap-2">
+                              {/*
                               <Button size="sm" variant="outline" className="flex-1 bg-transparent">
                                 View QR Code
                               </Button>
-                              <Button size="sm" variant="ghost" className="flex-1">
+                              */}
+                              <Button size="sm" variant="ghost" className="flex-1" onClick={() => openDirections(appointment.facilityId)}>
+                                <MapPin className="h-4 w-4 mr-2" />
                                 Get Directions
                               </Button>
                             </div>

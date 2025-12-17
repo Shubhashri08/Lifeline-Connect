@@ -1,4 +1,4 @@
-export const API_BASE_URL = "http://localhost:8000/api";
+export const API_BASE_URL = "/api";
 
 export async function fetchFacilities(lat?: number, lng?: number, symptom?: string) {
     const params = new URLSearchParams();
@@ -6,7 +6,7 @@ export async function fetchFacilities(lat?: number, lng?: number, symptom?: stri
     if (lng) params.append("lng", lng.toString());
     if (symptom) params.append("symptom", symptom);
 
-    const res = await fetch(`${API_BASE_URL}/facilities?${params.toString()}`);
+    const res = await fetch(`${API_BASE_URL}/hospitals?${params.toString()}`);
     if (!res.ok) {
         throw new Error("Failed to fetch facilities");
     }

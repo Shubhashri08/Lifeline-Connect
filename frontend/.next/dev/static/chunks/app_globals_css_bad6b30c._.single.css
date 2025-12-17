@@ -610,6 +610,10 @@
     order: 9999;
   }
 
+  .col-span-3 {
+    grid-column: span 3 / span 3;
+  }
+
   .col-start-2 {
     grid-column-start: 2;
   }
@@ -959,6 +963,10 @@
     height: calc(var(--spacing) * 16);
   }
 
+  .h-20 {
+    height: calc(var(--spacing) * 20);
+  }
+
   .h-48 {
     height: calc(var(--spacing) * 48);
   }
@@ -1101,6 +1109,10 @@
 
   .w-16 {
     width: calc(var(--spacing) * 16);
+  }
+
+  .w-20 {
+    width: calc(var(--spacing) * 20);
   }
 
   .w-48 {
@@ -1383,6 +1395,10 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
   .grid-cols-\[0_1fr\] {
     grid-template-columns: 0 1fr;
   }
@@ -1555,6 +1571,10 @@
     overflow-y: auto;
   }
 
+  .rounded {
+    border-radius: .25rem;
+  }
+
   .rounded-\[2px\] {
     border-radius: 2px;
   }
@@ -1718,20 +1738,6 @@
     }
   }
 
-  .border-primary\/20 {
-    border-color: var(--primary);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .border-primary\/20 {
-      border-color: color-mix(in oklab, var(--primary) 20%, transparent);
-    }
-  }
-
-  .border-secondary {
-    border-color: var(--secondary);
-  }
-
   .border-sidebar-border {
     border-color: var(--sidebar-border);
   }
@@ -1759,11 +1765,6 @@
   .bg-\[\#25D366\]\/5 {
     background-color: #25d3660d;
     background-color: lab(74.7716% -60.9649 41.133 / .05);
-  }
-
-  .bg-\[\#25D366\]\/10 {
-    background-color: #25d3661a;
-    background-color: lab(74.7716% -60.9649 41.133 / .1);
   }
 
   .bg-accent {
@@ -1847,16 +1848,6 @@
   @supports (color: color-mix(in lab, red, red)) {
     .bg-primary-foreground\/10 {
       background-color: color-mix(in oklab, var(--primary-foreground) 10%, transparent);
-    }
-  }
-
-  .bg-primary\/5 {
-    background-color: var(--primary);
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-primary\/5 {
-      background-color: color-mix(in oklab, var(--primary) 5%, transparent);
     }
   }
 
@@ -2179,6 +2170,10 @@
 
   .text-left {
     text-align: left;
+  }
+
+  .text-right {
+    text-align: right;
   }
 
   .align-middle {
@@ -4419,6 +4414,12 @@
   @media (min-width: 40rem) {
     .sm\:hidden {
       display: none;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .sm\:max-w-\[425px\] {
+      max-width: 425px;
     }
   }
 

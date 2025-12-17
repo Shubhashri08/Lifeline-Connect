@@ -10,12 +10,12 @@ node_modules/
 coverage/
 
 # Next.js
-/.next/
-/out/
+.next/
+out/
 
 # Production
-/build
-/dist
+build
+dist
 
 # Misc
 .env
@@ -34,3 +34,7 @@ yarn-error.log*
 
 # Agent Artifacts
 .gemini/
+
+# Local Data
+frontend/lib/data/appointments.json
+frontend/lib/data/users.json

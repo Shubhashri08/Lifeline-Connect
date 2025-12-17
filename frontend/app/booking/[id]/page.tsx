@@ -11,28 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Activity, ArrowLeft, Calendar, Clock, Hospital, Loader2, CheckCircle2 } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { WhatsAppButton } from "@/components/whatsapp-button"
-
-// Mock facility data (in production, fetch from API)
-const mockFacilities = {
-  "1": {
-    id: 1,
-    name: "District Hospital Nashik",
-    type: "District Hospital",
-    specialists: ["Cardiologist", "Orthopedic"],
-  },
-  "2": {
-    id: 2,
-    name: "PHC Satana",
-    type: "Primary Health Center",
-    specialists: ["General Physician"],
-  },
-  "3": {
-    id: 3,
-    name: "Community Health Center Malegaon",
-    type: "Community Health Center",
-    specialists: ["Pediatrician", "Gynecologist"],
-  },
-}
+import { fetchFacilities } from "@/lib/api"
 
 const timeSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"]
 
@@ -58,13 +37,26 @@ export default function BookingPage() {
       return
     }
 
-    // Load facility data
-    const facilityData = mockFacilities[facilityId as keyof typeof mockFacilities]
-    if (facilityData) {
-      setFacility(facilityData)
-    } else {
-      router.push("/dashboard")
+    // Load facility data from API/Data
+    // Ideally fetch specific facility by ID, but for now filtering from all
+    const loadFacility = async () => {
+      try {
+        const allFacilities = await fetchFacilities();
+        const found = allFacilities.find((f: any) => f.id === facilityId);
+        if (found) {
+          setFacility(found);
+        } else {
+          // Fallback or error if not found in top 5 list (api limitations currently)
+          // For a real app, we need an endpoint for getFacilityById. 
+          // But we can just use the one we have and hope it's cached or available or restart search
+          router.push("/dashboard")
+        }
+      } catch (e) {
+        console.error("Failed to load facility", e);
+      }
     }
+    loadFacility();
+
 
     // Set default date to tomorrow
     const tomorrow = new Date()
@@ -73,10 +65,8 @@ export default function BookingPage() {
   }, [facilityId, router])
 
   const generateNFTToken = () => {
-    // Simulate blockchain NFT token generation
-    // In production, this would call Polygon smart contract
-    const tokenId = `NFT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    return tokenId
+    // Generate a unique token ID
+    return `APT-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
   }
 
   const handleBookAppointment = async () => {
@@ -87,16 +77,10 @@ export default function BookingPage() {
     setLoading(true)
 
     try {
-      // Simulate API call to create appointment
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // Generate NFT token
       const token = generateNFTToken()
       setNftToken(token)
 
-      // Store appointment in localStorage (in production, use database)
-      const appointment = {
-        id: token,
+      const appointmentData = {
         facilityId: facility.id,
         facilityName: facility.name,
         date: selectedDate,
@@ -106,16 +90,20 @@ export default function BookingPage() {
         userEmail: getUserEmail(),
         userName: getUserName(),
         nftToken: token,
-        createdAt: new Date().toISOString(),
+        status: 'confirmed'
       }
 
-      const existingAppointments = JSON.parse(localStorage.getItem("appointments") || "[]")
-      existingAppointments.push(appointment)
-      localStorage.setItem("appointments", JSON.stringify(existingAppointments))
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(appointmentData),
+      })
+
+      if (!res.ok) throw new Error("Failed to save appointment")
 
       setBookingComplete(true)
     } catch (error) {
-      console.error("[v0] Booking error:", error)
+      console.error("Booking error:", error)
     } finally {
       setLoading(false)
     }
@@ -143,16 +131,9 @@ export default function BookingPage() {
                 <CheckCircle2 className="h-8 w-8 text-secondary" />
               </div>
               <CardTitle className="text-2xl">Appointment Confirmed!</CardTitle>
-              <CardDescription>Your blockchain-verified appointment has been created</CardDescription>
+              <CardDescription>Your appointment has been successfully scheduled</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <Alert className="bg-secondary/10 border-secondary">
-                <AlertDescription className="text-center">
-                  <strong>Your appointment is secured with blockchain technology</strong>
-                  <br />
-                  This prevents fraud and ensures fair access
-                </AlertDescription>
-              </Alert>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
@@ -175,14 +156,14 @@ export default function BookingPage() {
                 </div>
 
                 <div className="border rounded-lg p-4 bg-muted/30">
-                  <p className="text-sm text-muted-foreground mb-2">NFT Token ID</p>
+                  <p className="text-sm text-muted-foreground mb-2">Token ID</p>
                   <p className="font-mono text-sm break-all mb-4">{nftToken}</p>
 
-                  {/* QR Code Placeholder */}
+                  {/* Real QR Code using api.qrserver.com */}
                   <div className="bg-background border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center">
-                    <div className="h-48 w-48 bg-muted rounded-lg mb-4 flex items-center justify-center">
+                    <div className="h-48 w-48 bg-white rounded-lg mb-4 flex items-center justify-center p-2">
                       <img
-                        src={`/qr-code-for-.jpg?height=192&width=192&query=QR+code+for+${nftToken}`}
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${nftToken}`}
                         alt="Appointment QR Code"
                         className="h-full w-full object-contain"
                       />
@@ -195,14 +176,14 @@ export default function BookingPage() {
 
                 <Alert>
                   <AlertDescription className="text-sm leading-relaxed">
-                    <strong>Important:</strong> Save this token ID or take a screenshot of the QR code. You'll need it
+                    <strong>Important:</strong> Save this token ID or take a screenshot of the QR code. You will need it
                     to verify your appointment at the healthcare facility.
                   </AlertDescription>
                 </Alert>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
-                <Button onClick={() => router.push("/profile")} className="flex-1">
+                <Button onClick={() => router.push("/profile?tab=appointments")} className="flex-1">
                   View All Appointments
                 </Button>
                 <Button onClick={() => router.push("/dashboard")} variant="outline" className="flex-1 bg-transparent">
@@ -210,16 +191,6 @@ export default function BookingPage() {
                 </Button>
               </div>
 
-              <Alert className="bg-[#25D366]/10 border-[#25D366]/20">
-                <AlertDescription className="space-y-2">
-                  <p className="text-sm font-medium">Get appointment reminders on WhatsApp</p>
-                  <WhatsAppButton
-                    variant="inline"
-                    preFilledMessage={`Hi! I just booked an appointment at ${facility.name} on ${new Date(selectedDate).toLocaleDateString()} at ${selectedTime}. Token: ${nftToken}. Please send me reminders.`}
-                    className="w-full bg-[#25D366] hover:bg-[#20BA5A] text-white"
-                  />
-                </AlertDescription>
-              </Alert>
             </CardContent>
           </Card>
         </div>
@@ -265,7 +236,7 @@ export default function BookingPage() {
           <Card>
             <CardHeader>
               <CardTitle>Book Your Appointment</CardTitle>
-              <CardDescription>Your appointment will be secured with a blockchain-verified NFT token</CardDescription>
+              <CardDescription>Secure your appointment instantly</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -328,14 +299,6 @@ export default function BookingPage() {
                   className="min-h-24 resize-none"
                 />
               </div>
-
-              <Alert className="bg-primary/5 border-primary/20">
-                <AlertDescription className="text-sm leading-relaxed">
-                  <strong>Blockchain Security:</strong> Your appointment will be issued as an NFT token on the Polygon
-                  network. This ensures your booking cannot be duplicated or manipulated, preventing queue-jumping and
-                  fraud.
-                </AlertDescription>
-              </Alert>
 
               <Button
                 onClick={handleBookAppointment}

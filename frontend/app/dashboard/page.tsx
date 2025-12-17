@@ -13,9 +13,7 @@ import { MapComponent } from "@/components/map-component"
 import { FacilityCard } from "@/components/facility-card"
 import { WhatsAppButton } from "@/components/whatsapp-button"
 import { fetchFacilities } from "@/lib/api"
-
-// Mock facility data - REMOVED, using state directly
-
+import { AppointmentDialog } from "@/components/appointment-dialog"
 
 const symptoms = [
   "Fever",
@@ -38,6 +36,7 @@ export default function DashboardPage() {
   const [searchPerformed, setSearchPerformed] = useState(false)
 
   useEffect(() => {
+    // ... existing useEffect logic ...
     setMounted(true)
     if (!isAuthenticated()) {
       router.push("/login")
@@ -57,14 +56,15 @@ export default function DashboardPage() {
           fetchFacilitiesWithLocation(lat, lng)
         },
         () => {
-          setLocation("Location unavailable")
-          // Fetch without location (will show all sorted default or unsorted)
+          // setLocation("Location unavailable") // Don't override if user types? Actually this runs on mount.
+          // Fetch without location 
           fetchFacilitiesWithLocation()
         },
       )
     }
   }, [router])
 
+  // ... existing fetchFacilitiesWithLocation ...
   const fetchFacilitiesWithLocation = async (lat?: number, lng?: number, symptom?: string) => {
     try {
       const data = await fetchFacilities(lat, lng, symptom)
@@ -74,11 +74,9 @@ export default function DashboardPage() {
     }
   }
 
+  // ... existing handleSearch ...
   const handleSearch = () => {
     setSearchPerformed(true)
-    // Parse location string back to numbers if possible, or just pass symptom
-    // Ideally we store simple lat/lng in state not just the string
-    // For now re-using the initial fetch logic would be cleaner if we stored lat/lng state
     const [latStr, lngStr] = location.split(',').map(s => s.trim())
     const lat = parseFloat(latStr)
     const lng = parseFloat(lngStr)
@@ -92,6 +90,10 @@ export default function DashboardPage() {
 
   const handleLogout = () => {
     logout()
+  }
+
+  const handleBook = (facilityId: string) => {
+    router.push(`/booking/${facilityId}`)
   }
 
   if (!mounted) {
@@ -227,7 +229,7 @@ export default function DashboardPage() {
                   <FacilityCard
                     key={facility.id}
                     facility={facility}
-                    onBook={() => router.push(`/booking/${facility.id}`)}
+                    onBook={() => handleBook(facility.id)}
                   />
                 ))}
               </div>
