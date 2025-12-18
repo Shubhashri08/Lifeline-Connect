@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/shubhashri/Desktop/Lifeline-Connect/frontend/components/map-component.tsx"],"sourcesContent":["\"use client\"\n\nimport dynamic from \"next/dynamic\"\nimport { useMemo } from \"react\"\n\nconst MapInner = dynamic(() => import(\"./map-inner\"), {\n  ssr: false,\n  loading: () => <div className=\"h-full w-full bg-muted flex items-center justify-center\">Loading Map...</div>\n})\n\ninterface Facility {\n  id: string\n  name: string\n  lat: number\n  lng: number\n  availability: string\n}\n\ninterface MapComponentProps {\n  facilities: Facility[]\n  userLocation?: { lat: number; lng: number } | null\n}\n\nexport function MapComponent(props: MapComponentProps) {\n  // Use useMemo to prevent unnecessary re-renders of the dynamic component\n  const Map = useMemo(() => MapInner, [])\n  return <Map {...props} />\n}\n"],"names":[],"mappings":";;;;;AAEA;AACA;;;;AAHA;;;AAKA,MAAM,WAAW,IAAA,6KAAO,OAAC;;;;;;IACvB,KAAK;IACL,SAAS,kBAAM,6LAAC;YAAI,WAAU;sBAA0D;;;;;;;;AAgBnF,SAAS,aAAa,KAAwB;;IACnD,yEAAyE;IACzE,MAAM,MAAM,IAAA,wKAAO;qCAAC,IAAM;oCAAU,EAAE;IACtC,qBAAO,6LAAC;QAAK,GAAG,KAAK;;;;;;AACvB;GAJgB;MAAA"}}]
+}

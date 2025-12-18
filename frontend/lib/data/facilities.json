@@ -1,0 +1,228 @@
+[
+    {
+        "id": "1",
+        "name": "AIIMS Delhi",
+        "type": "Government Institute",
+        "bedsAvailable": 42,
+        "totalBeds": 2500,
+        "specialists": [
+            "Cardiologist",
+            "Neurologist",
+            "Oncologist"
+        ],
+        "labWaitTime": "4 hours",
+        "lat": 28.5672,
+        "lng": 77.2100,
+        "availability": "limited"
+    },
+    {
+        "id": "2",
+        "name": "Safdarjung Hospital",
+        "type": "Government Hospital",
+        "bedsAvailable": 12,
+        "totalBeds": 1500,
+        "specialists": [
+            "General Surgeon",
+            "Orthopedic"
+        ],
+        "labWaitTime": "2 hours",
+        "lat": 28.5680,
+        "lng": 77.2058,
+        "availability": "limited"
+    },
+    {
+        "id": "3",
+        "name": "Apollo Hospital Chennai",
+        "type": "Private Hospital",
+        "bedsAvailable": 150,
+        "totalBeds": 600,
+        "specialists": [
+            "Cardiologist",
+            "Transplant Surgeon"
+        ],
+        "labWaitTime": "30 min",
+        "lat": 13.0632,
+        "lng": 80.2520,
+        "availability": "available"
+    },
+    {
+        "id": "4",
+        "name": "Narayana Health City Bangalore",
+        "type": "Private Hospital",
+        "bedsAvailable": 80,
+        "totalBeds": 1200,
+        "specialists": [
+            "Cardiologist",
+            "Pediatrician"
+        ],
+        "labWaitTime": "45 min",
+        "lat": 12.8245,
+        "lng": 77.6931,
+        "availability": "available"
+    },
+    {
+        "id": "5",
+        "name": "KEM Hospital Mumbai",
+        "type": "Government Hospital",
+        "bedsAvailable": 5,
+        "totalBeds": 1800,
+        "specialists": [
+            "General Physician",
+            "Neurologist"
+        ],
+        "labWaitTime": "3 hours",
+        "lat": 19.0028,
+        "lng": 72.8422,
+        "availability": "available"
+    },
+    {
+        "id": "6",
+        "name": "Tata Memorial Hospital Mumbai",
+        "type": "Specialized Cancer Center",
+        "bedsAvailable": 20,
+        "totalBeds": 700,
+        "specialists": [
+            "Oncologist"
+        ],
+        "labWaitTime": "1 day",
+        "lat": 19.0060,
+        "lng": 72.8430,
+        "availability": "limited"
+    },
+    {
+        "id": "7",
+        "name": "PGIMER Chandigarh",
+        "type": "Government Institute",
+        "bedsAvailable": 25,
+        "totalBeds": 1900,
+        "specialists": [
+            "Nephrologist",
+            "Pulmonologist"
+        ],
+        "labWaitTime": "5 hours",
+        "lat": 30.7628,
+        "lng": 76.7794,
+        "availability": "limited"
+    },
+    {
+        "id": "8",
+        "name": "CMC Vellore",
+        "type": "Private Medical College",
+        "bedsAvailable": 60,
+        "totalBeds": 2200,
+        "specialists": [
+            "General Physician",
+            "Gastroenterologist"
+        ],
+        "labWaitTime": "4 hours",
+        "lat": 12.9246,
+        "lng": 79.1333,
+        "availability": "limited"
+    },
+    {
+        "id": "9",
+        "name": "District Civil Hospital Nashik",
+        "type": "Government Hospital",
+        "bedsAvailable": 15,
+        "totalBeds": 500,
+        "specialists": [
+            "Orthopedic",
+            "General Surgeon"
+        ],
+        "labWaitTime": "1 hour",
+        "lat": 19.9975,
+        "lng": 73.7898,
+        "availability": "available"
+    },
+    {
+        "id": "10",
+        "name": "Apollo Hospitals Nashik",
+        "type": "Private Hospital",
+        "bedsAvailable": 40,
+        "totalBeds": 200,
+        "specialists": [
+            "Cardiologist",
+            "Neurologist"
+        ],
+        "labWaitTime": "20 min",
+        "lat": 19.9691,
+        "lng": 73.7868,
+        "availability": "available"
+    },
+    {
+        "id": "11",
+        "name": "Amrita Hospital Kochi",
+        "type": "Private Institute",
+        "bedsAvailable": 100,
+        "totalBeds": 1300,
+        "specialists": [
+            "Cardiologist",
+            "Endocrinologist"
+        ],
+        "labWaitTime": "1 hour",
+        "lat": 10.0326,
+        "lng": 76.2941,
+        "availability": "available"
+    },
+    {
+        "id": "12",
+        "name": "SSKM Hospital Kolkata",
+        "type": "Government Hospital",
+        "bedsAvailable": 8,
+        "totalBeds": 1100,
+        "specialists": [
+            "Hepatologist",
+            "General Surgeon"
+        ],
+        "labWaitTime": "2 hours",
+        "lat": 22.5354,
+        "lng": 88.3444,
+        "availability": "full"
+    },
+    {
+        "id": "13",
+        "name": "NIMS Hyderabad",
+        "type": "Government Institute",
+        "bedsAvailable": 30,
+        "totalBeds": 1000,
+        "specialists": [
+            "Urologist",
+            "Cardiologist"
+        ],
+        "labWaitTime": "3 hours",
+        "lat": 17.4119,
+        "lng": 78.4554,
+        "availability": "limited"
+    },
+    {
+        "id": "14",
+        "name": "SMS Hospital Jaipur",
+        "type": "Government Hospital",
+        "bedsAvailable": 50,
+        "totalBeds": 1600,
+        "specialists": [
+            "General Physician",
+            "Orthopedic"
+        ],
+        "labWaitTime": "1 hour",
+        "lat": 26.9048,
+        "lng": 75.8090,
+        "availability": "limited"
+    },
+    {
+        "id": "15",
+        "name": "Medanta - The Medicity Gurgaon",
+        "type": "Private Hospital",
+        "bedsAvailable": 85,
+        "totalBeds": 1250,
+        "specialists": [
+            "Cardiologist",
+            "Transplant Surgeon",
+            "Neurologist"
+        ],
+        "labWaitTime": "20 min",
+        "lat": 28.4397,
+        "lng": 77.0425,
+        "availability": "available"
+    }
+]
